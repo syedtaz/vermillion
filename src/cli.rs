@@ -1,11 +1,13 @@
 use clap::{ArgEnum, Parser};
 use std::fmt;
 
+/// Defines the list of algorithms that can be passed into the command line interface.
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ArgEnum)]
 pub enum AlgoList {
     Direct,
 }
 
+/// Implements debug trait for Algolist.
 impl fmt::Debug for AlgoList {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match &self {
@@ -16,6 +18,7 @@ impl fmt::Debug for AlgoList {
     }
 }
 
+/// Struct defining possible arguments that can be passed into the command line.
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 pub struct Args {
