@@ -1,14 +1,9 @@
 use crate::system::System;
 
-struct Protein {
-    state: [f32; 1],
-    /*
-    Reaction 1: a -> null
-    */
-}
+pub struct Protein {}
 
 impl System for Protein {
-    fn update(reaction: usize, state: &mut [f64]) -> Result<(), usize> {
+    fn update(&self, reaction: usize, state: &mut Vec<f32>) -> Result<(), usize> {
         match reaction {
             0 => {
                 state[0] -= 1.;
@@ -17,8 +12,14 @@ impl System for Protein {
             _ => Err(reaction),
         }
     }
-    fn propensity(proptbl: &mut [f64], _state: &mut [f64]) -> Result<(), usize> {
-        proptbl[0] = 1.0;
+    fn propensity(&self, proptbl: &mut Vec<f32>, state: &mut Vec<f32>) -> Result<(), usize> {
+        proptbl[0] = 1.0 * state[0];
         Ok(())
+    }
+    fn size(&self) -> usize {
+        1
+    }
+    fn name(&self) -> &str {
+        "protein"
     }
 }

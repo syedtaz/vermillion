@@ -3,6 +3,7 @@ mod fr;
 mod nrm;
 mod sdirect;
 
+use crate::system::System;
 use clap::ArgEnum;
 use std::fmt;
 
@@ -24,14 +25,24 @@ impl fmt::Debug for Algorithm {
 }
 
 /// Requires every algorithm to implement a simulate function.
-trait Simulate {
-    fn simulate(&self, t_end: f32) -> Result<(), usize>;
+pub trait Simulate {
+    fn simulate(
+        &self,
+        t_end: f32,
+        network: &impl System,
+        initial: Vec<f32>,
+    ) -> Result<Vec<Vec<f32>>, usize>;
 }
 
 impl Simulate for Algorithm {
-    fn simulate(&self, t_end: f32) -> Result<(), usize> {
+    fn simulate(
+        &self,
+        t_end: f32,
+        network: &impl System,
+        initial: Vec<f32>,
+    ) -> Result<Vec<Vec<f32>>, usize> {
         match &self {
-            Algorithm::Direct => direct::simulate(t_end),
+            Algorithm::Direct => direct::simulate(t_end, network, initial),
         }
     }
 }

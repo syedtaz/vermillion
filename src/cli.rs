@@ -10,7 +10,7 @@ pub struct Args {
     pub time: f32,
 
     /// Set number of repeats.
-    #[clap(short, long, default_value_t = 0)]
+    #[clap(short, long, default_value_t = 1)]
     pub repeats: usize,
 
     /// Set the timestep in seconds.
