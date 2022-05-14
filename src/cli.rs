@@ -14,8 +14,8 @@ pub struct Args {
     pub repeats: usize,
 
     /// Set the timestep in seconds.
-    #[clap(short, long, default_value_t = 0.)]
-    pub granularity: f32,
+    #[clap(short, long)]
+    pub granularity: Option<f32>,
 
     /// Write to disk.
     #[clap(short, long)]

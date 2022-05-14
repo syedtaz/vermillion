@@ -17,7 +17,9 @@ fn main() {
 
     for alg in args.algorithms {
         for idx in [0..args.repeats] {
-            let results = alg.simulate(args.time, &network, initial.clone()).unwrap();
+            let results = alg
+                .simulate(args.time, &network, initial.clone(), args.granularity)
+                .unwrap();
             if args.write {
                 let fname = format!(
                     "/Users/tazmilur/Projects/vermillion/data/{}_{:?}_{:?}",

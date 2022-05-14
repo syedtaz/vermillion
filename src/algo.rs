@@ -1,4 +1,5 @@
 mod direct;
+mod direct_jump;
 mod fr;
 mod nrm;
 mod sdirect;
@@ -11,6 +12,7 @@ use std::fmt;
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ArgEnum)]
 pub enum Algorithm {
     Direct,
+    DirectJump,
 }
 
 /// Implements debug trait for Algolist.
@@ -18,7 +20,10 @@ impl fmt::Debug for Algorithm {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match &self {
             Algorithm::Direct => {
-                write! {f, "direct"}
+                write! {f, "Direct"}
+            }
+            Algorithm::DirectJump => {
+                write! {f, "DirectJump"}
             }
         }
     }
@@ -31,6 +36,7 @@ pub trait Simulate {
         t_end: f32,
         network: &impl System,
         initial: Vec<f32>,
+        granularity: Option<f32>,
     ) -> Result<Vec<Vec<f32>>, usize>;
 }
 
@@ -40,9 +46,13 @@ impl Simulate for Algorithm {
         t_end: f32,
         network: &impl System,
         initial: Vec<f32>,
+        granularity: Option<f32>,
     ) -> Result<Vec<Vec<f32>>, usize> {
         match &self {
             Algorithm::Direct => direct::simulate(t_end, network, initial),
+            Algorithm::DirectJump => {
+                direct_jump::simulate(t_end, network, initial, granularity.unwrap())
+            }
         }
     }
 }
