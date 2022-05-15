@@ -12,8 +12,6 @@
 
 </div>
 
-Pure python implementation of the stochastic simulation algorithms.
-
 ## Usage
 
 ```
