@@ -4,8 +4,11 @@ mod fr;
 mod nrm;
 mod sdirect;
 
+use crate::cli;
+use crate::dataframes::*;
 use crate::system::System;
 use clap::ArgEnum;
+use ndarray;
 use std::fmt;
 
 /// Defines the list of algorithms that can be passed into the command line interface.
@@ -13,6 +16,13 @@ use std::fmt;
 pub enum Algorithm {
     Direct,
     DirectJump,
+}
+
+/// Defines the return type of each simulation algorithm. The algorithms can returns nested vectors if the granularity is not specified;
+/// otherwise, it returns an ndarray.
+pub enum Output {
+    Vec2D(Vec<Vec<f32>>),
+    Array2D(ndarray::Array<f32, ndarray::Dim<[usize; 2]>>),
 }
 
 /// Implements debug trait for Algolist.
@@ -37,7 +47,7 @@ pub trait Simulate {
         network: &impl System,
         initial: Vec<f32>,
         granularity: Option<f32>,
-    ) -> Result<Vec<Vec<f32>>, usize>;
+    ) -> Result<Output, usize>;
 }
 
 impl Simulate for Algorithm {
@@ -47,7 +57,7 @@ impl Simulate for Algorithm {
         network: &impl System,
         initial: Vec<f32>,
         granularity: Option<f32>,
-    ) -> Result<Vec<Vec<f32>>, usize> {
+    ) -> Result<Output, usize> {
         match &self {
             Algorithm::Direct => direct::simulate(t_end, network, initial),
             Algorithm::DirectJump => {
@@ -55,4 +65,52 @@ impl Simulate for Algorithm {
             }
         }
     }
+}
+
+pub fn dispatch(args: cli::Args, system: impl System, initial: Vec<f32>) -> Result<(), ()> {
+    match args.average {
+        true => {
+            let length = (args.time / args.granularity.unwrap()).ceil() as usize + 1;
+            for alg in args.algorithms {
+                let mut farray = ndarray::Array::<f32, _>::zeros((length, system.size() + 1));
+                for _ in 0..args.repeats {
+                    let results = alg
+                        .simulate(args.time, &system, initial.clone(), args.granularity)
+                        .unwrap();
+                    if let Output::Array2D(x) = results {
+                        farray += &x;
+                    }
+                }
+                farray = farray / args.repeats as f32;
+                let fname = format!(
+                    "/Users/tazmilur/Projects/vermillion/data/{}_{:?}_avg",
+                    system.name(),
+                    alg
+                );
+                write_csv_array(farray, &fname, system.size()).unwrap();
+            }
+        }
+        false => {
+            for alg in args.algorithms {
+                for idx in 0..args.repeats {
+                    let results = alg
+                        .simulate(args.time, &system, initial.clone(), args.granularity)
+                        .unwrap();
+                    if args.write {
+                        let fname = format!(
+                            "/Users/tazmilur/Projects/vermillion/data/{}_{:?}_{:?}",
+                            system.name(),
+                            alg,
+                            idx
+                        );
+                        if let Output::Vec2D(x) = results {
+                            write_csv(x, &fname, system.size());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Ok(())
 }

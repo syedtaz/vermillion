@@ -4,31 +4,14 @@ mod dataframes;
 mod examples;
 mod system;
 
-use algo::Simulate;
+use algo::dispatch;
 use clap::Parser;
-use dataframes::write_csv;
-use system::System;
+use std::env;
 
 fn main() {
+    env::set_var("RUST_BACKTRACE", "1");
     let args = cli::Args::parse();
     let initial = vec![100.];
-
     let network = examples::formation::Protein {};
-
-    for alg in args.algorithms {
-        for idx in [0..args.repeats] {
-            let results = alg
-                .simulate(args.time, &network, initial.clone(), args.granularity)
-                .unwrap();
-            if args.write {
-                let fname = format!(
-                    "/Users/tazmilur/Projects/vermillion/data/{}_{:?}_{:?}",
-                    network.name(),
-                    alg,
-                    idx
-                );
-                write_csv(results, &fname, network.size());
-            }
-        }
-    }
+    dispatch(args, network, initial).unwrap();
 }

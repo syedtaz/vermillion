@@ -1,4 +1,6 @@
+use crate::algo::Output;
 use crate::system::System;
+use ndarray::prelude::*;
 use rand::{thread_rng, Rng};
 use std::collections::VecDeque;
 
@@ -7,7 +9,7 @@ pub fn simulate(
     network: &impl System,
     initial: Vec<f32>,
     granularity: f32,
-) -> Result<Vec<Vec<f32>>, usize> {
+) -> Result<Output, usize> {
     // Define initial state.
     let mut state = initial;
     let mut t = 0.;
@@ -19,7 +21,12 @@ pub fn simulate(
         jumps.push_back(queue_time);
         queue_time += granularity;
     }
+    let length = jumps.len();
     let mut cur_jump = jumps.pop_front().unwrap();
+    let mut jump_idx = 0;
+
+    // Define ndarray
+    let mut results = Array::<f32, _>::zeros((length, network.size() + 1));
 
     // Define propensity and probability vectors.
     let size = network.size();
@@ -39,8 +46,8 @@ pub fn simulate(
     let mut prob_sum: f32;
 
     // Results vector
-    let mut results: Vec<Vec<f32>> = Vec::new();
-    let mut buffer = vec![0.; size + 1];
+    // let mut results: Vec<Vec<f32>> = Vec::new();
+    // let mut buffer = vec![0.; size + 1];
     let mut idx: usize;
 
     while t < t_end {
@@ -77,18 +84,19 @@ pub fn simulate(
 
         if t >= cur_jump {
             // Push results
-            buffer[0] = t;
+            let mut temp = results.row_mut(jump_idx);
+            temp[0] = t;
             idx = 1;
             for item in &state {
-                buffer[idx] = *item;
+                temp[idx] = *item;
                 idx += 1;
             }
-            results.push(buffer.clone());
 
-            // Update time
+            // Updates
             cur_jump = jumps.pop_front().unwrap();
+            jump_idx += 1;
         }
     }
 
-    Ok(results)
+    Ok(Output::Array2D(results))
 }

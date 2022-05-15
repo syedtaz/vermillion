@@ -1,3 +1,5 @@
+use csv;
+use ndarray;
 use polars::prelude::*;
 use std::fs::File;
 
@@ -17,4 +19,24 @@ pub fn write_csv(results: Vec<Vec<f32>>, fname: &str, size: usize) {
         Err(e) => println!("{:?}", e),
         _ => (),
     }
+}
+
+pub fn write_csv_array(
+    results: ndarray::Array<f32, ndarray::Dim<[usize; 2]>>,
+    fname: &str,
+    size: usize,
+) -> std::result::Result<(), ()> {
+    let mut headers = vec!["time".to_string()];
+    for i in 0..size {
+        headers.push(i.to_string());
+    }
+
+    let mut wtr = csv::Writer::from_path(fname).unwrap();
+    wtr.write_record(&headers).unwrap();
+    for row in results.rows() {
+        let x: Vec<String> = row.iter().map(|x| x.to_string()).collect();
+        wtr.write_record(x).unwrap();
+    }
+    wtr.flush().unwrap();
+    Ok(())
 }

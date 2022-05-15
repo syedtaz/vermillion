@@ -24,4 +24,8 @@ pub struct Args {
     /// List of algorithms to run.
     #[clap(arg_enum)]
     pub algorithms: Vec<Algorithm>,
+
+    // Average of repeats.
+    #[clap(short, long)]
+    pub average: bool,
 }

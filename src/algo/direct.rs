@@ -1,11 +1,8 @@
+use crate::algo::Output;
 use crate::system::System;
 use rand::{thread_rng, Rng};
 
-pub fn simulate(
-    t_end: f32,
-    network: &impl System,
-    initial: Vec<f32>,
-) -> Result<Vec<Vec<f32>>, usize> {
+pub fn simulate(t_end: f32, network: &impl System, initial: Vec<f32>) -> Result<Output, usize> {
     // Define initial state.
     let mut state = initial;
     let mut t = 0.;
@@ -74,5 +71,5 @@ pub fn simulate(
         results.push(buffer.clone());
     }
 
-    Ok(results)
+    Ok(Output::Vec2D(results))
 }
