@@ -70,7 +70,7 @@ impl Simulate for Algorithm {
 pub fn dispatch(args: cli::Args, system: impl System, initial: Vec<f32>) -> Result<(), ()> {
     match args.average {
         true => {
-            let length = (args.time / args.granularity.unwrap()).ceil() as usize + 1;
+            let length = (args.time / args.granularity.unwrap()).ceil() as usize;
             for alg in args.algorithms {
                 let mut farray = ndarray::Array::<f32, _>::zeros((length, system.size() + 1));
                 for _ in 0..args.repeats {

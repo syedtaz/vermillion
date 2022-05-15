@@ -1,3 +1,5 @@
+## Usage
+
 ```
 vermillion 0.1.0
 Tazmilur Saad
