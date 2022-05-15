@@ -3,7 +3,7 @@
     <img src="./logo.png" style = "width: 10vw; min-width: 100px;" alt="vermillion logo"/>
   </a>
   <br />
-  <strong>vermillion --bare</strong>
+  <strong>Vermillion</strong>
 </div>
 
 <div align="center">
