@@ -82,7 +82,7 @@ pub fn simulate(
         network.update(j, &mut state).unwrap();
         t += tau;
 
-        if t >= cur_jump {
+        if t >= cur_jump && t.is_finite() {
             // Push results
             let mut temp = results.row_mut(jump_idx);
             temp[0] = t;
