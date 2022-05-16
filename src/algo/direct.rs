@@ -26,7 +26,7 @@ pub fn simulate(t_end: f32, network: &impl System, initial: Vec<f32>) -> Result<
 
     // Results vector
     let mut results: Vec<Vec<f32>> = Vec::new();
-    let mut buffer = vec![0.; size + 1];
+    let mut buffer = vec![0.; state.len() + 1];
     let mut idx: usize;
 
     while t < t_end {

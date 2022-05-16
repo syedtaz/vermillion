@@ -26,7 +26,7 @@ pub fn simulate(
     let mut jump_idx = 0;
 
     // Define ndarray
-    let mut results = Array::<f32, _>::zeros((length, network.size() + 1));
+    let mut results = Array::<f32, _>::zeros((length, state.len() + 1));
 
     // Define propensity and probability vectors.
     let size = network.size();
@@ -44,10 +44,6 @@ pub fn simulate(
     let mut j: usize;
     let mut prop_sum: f32;
     let mut prob_sum: f32;
-
-    // Results vector
-    // let mut results: Vec<Vec<f32>> = Vec::new();
-    // let mut buffer = vec![0.; size + 1];
     let mut idx: usize;
 
     while t < t_end {
@@ -76,7 +72,9 @@ pub fn simulate(
             prob_sum += probtbl[j];
             j += 1;
         }
-        j -= 1;
+        if j != 0 {
+            j -= 1;
+        }
 
         // Update state & time.
         network.update(j, &mut state).unwrap();
@@ -93,7 +91,14 @@ pub fn simulate(
             }
 
             // Updates
-            cur_jump = jumps.pop_front().unwrap();
+
+            match jumps.pop_front() {
+                Some(x) => {
+                    cur_jump = x;
+                }
+                None => break,
+            }
+            // cur_jump = jumps.pop_front().unwrap();
             jump_idx += 1;
         }
     }

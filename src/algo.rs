@@ -70,9 +70,20 @@ impl Simulate for Algorithm {
 pub fn dispatch(args: cli::Args, system: impl System, initial: Vec<f32>) -> Result<(), ()> {
     match args.average {
         true => {
-            let length = (args.time / args.granularity.unwrap()).ceil() as usize;
+            //let length = (args.time / args.granularity.unwrap()).ceil() as usize;
             for alg in args.algorithms {
-                let mut farray = ndarray::Array::<f32, _>::zeros((length, system.size() + 1));
+                let mut jumps: Vec<f32> = Vec::new();
+                let mut queue_time = 0.;
+                let jump = args.granularity.unwrap();
+
+                while queue_time <= args.time {
+                    jumps.push(queue_time);
+                    queue_time += jump;
+                }
+                let length = jumps.len();
+
+                let mut farray = ndarray::Array::<f32, _>::zeros((length, initial.len() + 1));
+
                 for _ in 0..args.repeats {
                     let results = alg
                         .simulate(args.time, &system, initial.clone(), args.granularity)
@@ -81,13 +92,19 @@ pub fn dispatch(args: cli::Args, system: impl System, initial: Vec<f32>) -> Resu
                         farray += &x;
                     }
                 }
+
                 farray = farray / args.repeats as f32;
+                let mut temp = farray.column_mut(0);
+                for (i, item) in jumps.iter().enumerate() {
+                    temp[i] = *item;
+                }
+
                 let fname = format!(
                     "/Users/tazmilur/Projects/vermillion/data/{}_{:?}_avg",
                     system.name(),
                     alg
                 );
-                write_csv_array(farray, &fname, system.size()).unwrap();
+                write_csv_array(farray, &fname, initial.len()).unwrap();
             }
         }
         false => {
@@ -104,7 +121,7 @@ pub fn dispatch(args: cli::Args, system: impl System, initial: Vec<f32>) -> Resu
                             idx
                         );
                         if let Output::Vec2D(x) = results {
-                            write_csv(x, &fname, system.size());
+                            write_csv(x, &fname, initial.len());
                         }
                     }
                 }

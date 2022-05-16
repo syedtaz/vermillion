@@ -12,7 +12,16 @@
 
 </div>
 
+## Installation
+
+- Download and install Rust from (https://www.rust-lang.org/tools/install)[here].
+- Clone the repository.
+- cd into the repository
+- `cargo build`
+
 ## Usage
+
+##
 
 ```
 vermillion 0.1.0
