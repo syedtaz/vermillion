@@ -68,7 +68,7 @@ pub fn simulate(
         // Choose reaction.
         j = 0;
         prob_sum = 0.0;
-        while prob_sum < r2 {
+        while prob_sum < r2 && j < network.size() {
             prob_sum += probtbl[j];
             j += 1;
         }
