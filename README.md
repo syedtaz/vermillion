@@ -13,12 +13,9 @@
 </div>
 
 <div align="center">
-
 <figure>
- <img src="./repressilator-example.png" style = "width: 13w; min-width: 100px;" alt="mrna-degradation-plot"/>
-  <figcaption>Average of 100 simulations of the Repressilator system.</figcaption>
+ <img src="./repressilator-example.png" style = "width: 10vw; min-width: 100px;" alt="repressilator-plot"/>
 </figure>
-
 </div>
 
 ## Installation
