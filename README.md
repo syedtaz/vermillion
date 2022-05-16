@@ -16,6 +16,7 @@
 <figure>
  <img src="./mrna-degradation-example.png" style = "width: 25vw; min-width: 100px;" alt="mrna-plot"/>
  <img src="./repressilator-example.png" style = "width: 25vw; min-width: 100px;" alt="repressilator-plot"/>
+ <figcaption>Average of the stochastic behavior of the MRNA degradation and the Repressilator system.</figcaption>
 </figure>
 </div>
 
@@ -74,6 +75,21 @@ can specify a granularity `g` and it will only save the results at every `g` tim
 file, you will have to specify a system and its initial conditions and then from the command line
 pass in arguments that will define how long you want to simulate, the granularity, whether to save the results
 or not and so on.
+
+In order to write your own system called `mysystem`:
+
+- Go to the examples directory.
+- Create a `mysystem.rs` file.
+- Edit the `examples.rs` file by adding `pub mod mysystem;`
+- In your `mysystem.rs` file, import the System trait by adding to the top `use crate::system::System;`
+- Add a struct `pub struct MySystem {}`
+- Implement the functionality described the `System` trait.
+  - Essentially your system must have four specific functions:
+    - A propensity function that takes in the current state and mutates it with the new propensities.
+    - An update function that takes in a reaction that fired and the state, and applies the changes.
+    - A name function that returns the name of the system to be used when logging the results.
+    - A size function that returns the number of reactions in the system.
+- Compile by running `cargo build` and edit the `main.rs` file to call your system.
 
 ```
 vermillion 0.1.0
