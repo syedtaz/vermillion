@@ -12,6 +12,13 @@
 
 </div>
 
+<div align="center">
+
+  <img src="./mrna-degradation-example.png" style = "width: 10vw; min-width: 100px;" alt="mrna-degradation-plot"/>
+  <img src="./repressilator-example.png" style = "width: 10vw; min-width: 100px;" alt="mrna-degradation-plot"/>
+
+</div>
+
 ## Installation
 
 - Download and install Rust from [here](https://www.rust-lang.org/tools/install).

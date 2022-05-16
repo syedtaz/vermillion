@@ -30,7 +30,6 @@ pub fn write_csv_array(
     for i in 0..size {
         headers.push(i.to_string());
     }
-
     let mut wtr = csv::Writer::from_path(fname).unwrap();
     wtr.write_record(&headers).unwrap();
     for row in results.rows() {

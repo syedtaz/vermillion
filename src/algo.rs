@@ -9,7 +9,9 @@ use crate::dataframes::*;
 use crate::system::System;
 use clap::ArgEnum;
 use ndarray;
+use std::env;
 use std::fmt;
+use std::path::Path;
 
 /// Defines the list of algorithms that can be passed into the command line interface.
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, ArgEnum)]
@@ -99,12 +101,13 @@ pub fn dispatch(args: cli::Args, system: impl System, initial: Vec<f32>) -> Resu
                     temp[i] = *item;
                 }
 
-                let fname = format!(
-                    "/Users/tazmilur/Projects/vermillion/data/{}_{:?}_avg",
-                    system.name(),
-                    alg
-                );
-                write_csv_array(farray, &fname, initial.len()).unwrap();
+                let mut curdir = env::current_dir().unwrap();
+                curdir.pop();
+                curdir.pop();
+                let temp = format!("data/{}_{:?}_avg", system.name(), alg);
+                let path = Path::new(&temp);
+                let fname = curdir.join(path);
+                write_csv_array(farray, fname.to_str().unwrap(), initial.len()).unwrap();
             }
         }
         false => {
@@ -114,14 +117,14 @@ pub fn dispatch(args: cli::Args, system: impl System, initial: Vec<f32>) -> Resu
                         .simulate(args.time, &system, initial.clone(), args.granularity)
                         .unwrap();
                     if args.write {
-                        let fname = format!(
-                            "/Users/tazmilur/Projects/vermillion/data/{}_{:?}_{:?}",
-                            system.name(),
-                            alg,
-                            idx
-                        );
+                        let mut curdir = env::current_dir().unwrap();
+                        curdir.pop();
+                        curdir.pop();
+                        let temp = format!("data/{}_{:?}_{:?}", system.name(), alg, idx);
+                        let path = Path::new(&temp);
+                        let fname = curdir.join(path);
                         if let Output::Vec2D(x) = results {
-                            write_csv(x, &fname, initial.len());
+                            write_csv(x, fname.to_str().unwrap(), initial.len());
                         }
                     }
                 }

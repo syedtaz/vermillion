@@ -13,11 +13,11 @@ fn main() {
     let args = cli::Args::parse();
 
     // MRNA Degradation
-    // let initial = vec![100.];
-    // let network = examples::formation::Protein {};
+    let initial = vec![100.];
+    let network = examples::formation::Protein {};
 
     // Repressilator
-    let initial = vec![10., 10., 10., 10., 10., 10., 0., 0., 0.];
-    let network = examples::repressilator::Repressilator {};
+    // let initial = vec![10., 10., 10., 10., 10., 10., 0., 0., 0.];
+    // let network = examples::repressilator::Repressilator {};
     dispatch(args, network, initial).unwrap();
 }
