@@ -14,7 +14,8 @@
 
 <div align="center">
 <figure>
- <img src="./repressilator-example.png" style = "width: 10vw; min-width: 100px;" alt="repressilator-plot"/>
+ <img src="./mrna-degradation-example.png" style = "width: 20vw; min-width: 100px;" alt="mrna-plot"/>
+ <img src="./repressilator-example.png" style = "width: 20vw; min-width: 100px;" alt="repressilator-plot"/>
 </figure>
 </div>
 
