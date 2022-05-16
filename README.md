@@ -14,8 +14,8 @@
 
 <div align="center">
 
-  <img src="./mrna-degradation-example.png" style = "width: 50vw; min-width: 100px;" alt="mrna-degradation-plot"/>
-  <img src="./repressilator-example.png" style = "width: 50vw; min-width: 100px;" alt="mrna-degradation-plot"/>
+  <img src="./mrna-degradation-example.png" style = "width: 20vw; min-width: 100px;" alt="mrna-degradation-plot"/>
+  <img src="./repressilator-example.png" style = "width: 20w; min-width: 100px;" alt="mrna-degradation-plot"/>
 
 </div>
 
